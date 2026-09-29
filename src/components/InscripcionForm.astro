@@ -1,0 +1,274 @@
+---
+/**
+ * The sign-up form. Posts to `/api/inscripcion`, which creates the Moodle
+ * account, enrols it and emails the access details; see that route for the
+ * rules. Without JavaScript the browser still validates the required fields,
+ * but the submit needs the script to show the result.
+ */
+import { MOODLE_URL, MOODLE_TOKEN, MOODLE_COURSE_IDS, RESEND_API_KEY, RESEND_FROM_EMAIL } from 'astro:env/server';
+import { COMUNAS_RM, COMUNA_DESTACADA, COMUNA_OTRA } from '@/config/programa';
+import { parseCourseIds } from '@/lib/inscripcion';
+
+// Say it is not configured before anyone types, not after they submit.
+const configured = Boolean(
+  MOODLE_URL && MOODLE_TOKEN && parseCourseIds(MOODLE_COURSE_IDS).length && RESEND_API_KEY && RESEND_FROM_EMAIL,
+);
+const disabled = !configured && !import.meta.env.DEV;
+const otrasComunas = COMUNAS_RM.filter((c) => c !== COMUNA_DESTACADA);
+---
+
+<div data-inscripcion>
+  <form action="/api/inscripcion" method="POST" class="space-y-5" novalidate>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="label" for="f-firstname">Nombres</label>
+        <input
+          class="field"
+          id="f-firstname"
+          name="firstname"
+          required
+          autocomplete="given-name"
+          maxlength="100"
+          aria-describedby="e-firstname"
+        />
+        <p id="e-firstname" data-error-for="firstname" class="mt-1 hidden text-sm text-danger"></p>
+      </div>
+      <div>
+        <label class="label" for="f-lastname">Apellidos</label>
+        <input
+          class="field"
+          id="f-lastname"
+          name="lastname"
+          required
+          autocomplete="family-name"
+          maxlength="100"
+          aria-describedby="e-lastname"
+        />
+        <p id="e-lastname" data-error-for="lastname" class="mt-1 hidden text-sm text-danger"></p>
+      </div>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="label" for="f-rut">RUT</label>
+        <input
+          class="field"
+          id="f-rut"
+          name="rut"
+          required
+          inputmode="text"
+          placeholder="12.345.678-9"
+          maxlength="12"
+          aria-describedby="h-rut e-rut"
+        />
+        <p id="h-rut" class="hint">Será tu nombre de usuario en el Aula Virtual.</p>
+        <p id="e-rut" data-error-for="rut" class="mt-1 hidden text-sm text-danger"></p>
+      </div>
+      <div>
+        <label class="label" for="f-phone">Teléfono</label>
+        <input
+          class="field"
+          id="f-phone"
+          name="phone"
+          type="tel"
+          required
+          autocomplete="tel"
+          placeholder="+56 9 1234 5678"
+          maxlength="20"
+          aria-describedby="e-phone"
+        />
+        <p id="e-phone" data-error-for="phone" class="mt-1 hidden text-sm text-danger"></p>
+      </div>
+    </div>
+
+    <div>
+      <label class="label" for="f-email">Correo electrónico</label>
+      <input
+        class="field"
+        id="f-email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        maxlength="100"
+        aria-describedby="h-email e-email"
+      />
+      <p id="h-email" class="hint">Aquí te enviaremos tus datos de acceso.</p>
+      <p id="e-email" data-error-for="email" class="mt-1 hidden text-sm text-danger"></p>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="label" for="f-comuna">Comuna</label>
+        <select class="field" id="f-comuna" name="comuna" required aria-describedby="e-comuna">
+          <option value="" selected disabled>Selecciona tu comuna</option>
+          <option value={COMUNA_DESTACADA}>{COMUNA_DESTACADA}</option>
+          <optgroup label="Región Metropolitana">
+            {otrasComunas.map((c) => <option value={c}>{c}</option>)}
+          </optgroup>
+          <option value={COMUNA_OTRA}>{COMUNA_OTRA}</option>
+        </select>
+        <p id="e-comuna" data-error-for="comuna" class="mt-1 hidden text-sm text-danger"></p>
+      </div>
+      <div>
+        <label class="label" for="f-address">Dirección</label>
+        <input
+          class="field"
+          id="f-address"
+          name="address"
+          required
+          autocomplete="street-address"
+          placeholder="Calle, número, depto."
+          maxlength="255"
+          aria-describedby="e-address"
+        />
+        <p id="e-address" data-error-for="address" class="mt-1 hidden text-sm text-danger"></p>
+      </div>
+    </div>
+
+    <div>
+      <label class="label" for="f-institution">
+        Emprendimiento u organización <span class="font-normal text-muted">(opcional)</span>
+      </label>
+      <input
+        class="field"
+        id="f-institution"
+        name="institution"
+        autocomplete="organization"
+        maxlength="255"
+        aria-describedby="e-institution"
+      />
+      <p id="e-institution" data-error-for="institution" class="mt-1 hidden text-sm text-danger"></p>
+    </div>
+
+    <div>
+      <label class="flex cursor-pointer items-start gap-3 text-sm">
+        <input
+          type="checkbox"
+          name="consent"
+          required
+          class="mt-0.5 size-5 shrink-0 accent-brand"
+          aria-describedby="e-consent"
+        />
+        <span>
+          <span class="font-semibold">Acepto el uso de mis datos para esta inscripción.</span>
+          <span class="block text-muted">
+            Se usan solo para crear tu cuenta en el Aula Virtual y registrar tu participación en los cursos.
+          </span>
+        </span>
+      </label>
+      <p id="e-consent" data-error-for="consent" class="mt-1 hidden text-sm text-danger"></p>
+    </div>
+
+    <!-- Honeypot: invisible to people, filled in by bots -->
+    <div class="hidden" aria-hidden="true">
+      <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <p data-error-for="form" class="hidden rounded-lg bg-danger/10 px-4 py-3 text-sm text-danger" role="alert"></p>
+
+    {
+      !configured && (
+        <p class="text-center text-sm text-muted">
+          {import.meta.env.DEV
+            ? 'Falta configurar MOODLE_URL, MOODLE_TOKEN, MOODLE_COURSE_IDS, RESEND_API_KEY y RESEND_FROM_EMAIL (solo visible en desarrollo).'
+            : 'Las inscripciones no están disponibles en este momento.'}
+        </p>
+      )
+    }
+
+    <button
+      type="submit"
+      disabled={disabled}
+      class="w-full rounded-lg bg-brand px-6 py-3.5 text-base font-bold text-white transition-colors hover:bg-brand-strong focus-visible:ring-4 focus-visible:ring-brand/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      Inscribirme en la ruta
+    </button>
+  </form>
+
+  <div data-success class="hidden space-y-3 py-8 text-center" role="status" tabindex="-1">
+    <div class="mx-auto flex size-14 items-center justify-center rounded-full bg-success/15 text-success">
+      <svg viewBox="0 0 24 24" class="size-7" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M5 12.5l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <h3 class="text-xl font-extrabold">¡Inscripción lista!</h3>
+    <p class="text-balance text-muted" data-message>
+      Te enviamos tus datos de acceso a <strong data-email class="text-ink"></strong>. Si no lo ves en unos minutos,
+      revisa la carpeta de spam.
+    </p>
+    <p class="hidden text-balance text-muted" data-no-email>
+      Tu cuenta y tus cursos están listos, pero no pudimos enviarte el correo. Puedes crear tu contraseña aquí:
+      <a data-reset-link class="font-semibold text-brand underline" href="#">restablecer contraseña</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-inscripcion]');
+  const form = root?.querySelector('form');
+  const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  if (root && form && button) {
+    const label = button.textContent;
+    const fallback = 'No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.';
+
+    const clearErrors = () => {
+      form.querySelectorAll<HTMLElement>('[data-error-for]').forEach((el) => {
+        el.textContent = '';
+        el.classList.add('hidden');
+      });
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+    };
+
+    const showErrors = (errors: Record<string, string[]>) => {
+      let first: HTMLElement | null = null;
+      for (const [name, messages] of Object.entries(errors)) {
+        const slot =
+          form.querySelector<HTMLElement>(`[data-error-for="${name}"]`) ??
+          form.querySelector<HTMLElement>('[data-error-for="form"]');
+        if (!slot) continue;
+        slot.textContent = messages.join(' ');
+        slot.classList.remove('hidden');
+        const input = form.querySelector<HTMLElement>(`[name="${name}"]`);
+        input?.setAttribute('aria-invalid', 'true');
+        first ??= input ?? slot;
+      }
+      first?.focus();
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearErrors();
+      button.disabled = true;
+      button.textContent = 'Inscribiendo…';
+
+      try {
+        const body = new FormData(form);
+        const response = await fetch(form.action, { method: 'POST', body });
+        const data = await response.json();
+
+        if (!data.success) {
+          showErrors(data.errors ?? { form: [fallback] });
+          return;
+        }
+
+        const success = root.querySelector<HTMLElement>('[data-success]')!;
+        success.querySelector<HTMLElement>('[data-email]')!.textContent = String(body.get('email') ?? '').trim();
+        if (data.emailSent === false) {
+          success.querySelector('[data-message]')?.classList.add('hidden');
+          success.querySelector('[data-no-email]')?.classList.remove('hidden');
+          success.querySelector<HTMLAnchorElement>('[data-reset-link]')!.href = data.resetUrl;
+        }
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+        success.focus();
+      } catch {
+        showErrors({ form: [fallback] });
+      } finally {
+        button.disabled = false;
+        button.textContent = label;
+      }
+    });
+  }
+</script>

@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/*
+ * Brand tokens, taken from the Lo Barnechea HUB Aula Virtual: the logo's
+ * cyan (darkened for text contrast on white), its slate grey and the theme's
+ * yellow accent. Use these through Tailwind (`bg-brand`, `text-ink`…), never
+ * as raw hex values. The welcome email mirrors them in `lib/inscripcion.ts`.
+ */
+@theme {
+  --color-brand: #0077a3;
+  --color-brand-strong: #005f83;
+  --color-brand-soft: #e3f4f9;
+  --color-cyan: #00c8e0;
+  --color-accent: #f9bf3b;
+  --color-ink: #1e3a4a;
+  --color-muted: #5b6b75;
+  --color-surface: #ffffff;
+  --color-canvas: #f1f5f7;
+  --color-line: #d5dee3;
+  --color-danger: #b42318;
+  --color-success: #1a7f4b;
+
+  --font-sans: 'Open Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+.field {
+  @apply block w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-base text-ink placeholder:text-muted/70;
+  @apply focus:border-brand focus:ring-2 focus:ring-brand/25 focus:outline-none;
+  @apply aria-invalid:border-danger aria-invalid:ring-danger/20;
+}
+
+.label {
+  @apply mb-1.5 block text-sm font-semibold text-ink;
+}
+
+.hint {
+  @apply mt-1 text-sm text-muted;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

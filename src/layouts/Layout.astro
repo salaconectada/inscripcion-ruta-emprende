@@ -1,0 +1,79 @@
+---
+import '@/styles/global.css';
+import { PROGRAMA } from '@/config/programa';
+import { SUPPORT_EMAIL } from 'astro:env/server';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#1e3a4a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_CL" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap"
+    />
+  </head>
+  <body class="min-h-screen font-sans antialiased">
+    <a
+      href="#inscripcion"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2"
+      >Ir al formulario</a
+    >
+    <header class="border-b-4 border-accent bg-ink text-white">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+        <div class="leading-tight">
+          <p class="text-lg font-extrabold tracking-tight">{PROGRAMA.nombre}</p>
+          <p class="text-xs text-white/75">{PROGRAMA.organizador}</p>
+        </div>
+        <a
+          href="#inscripcion"
+          class="rounded-lg bg-accent px-4 py-2 text-sm font-bold text-ink transition-colors hover:bg-white"
+          >Inscríbete</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="border-t border-line bg-surface">
+      <div
+        class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6"
+      >
+        <p>{PROGRAMA.nombre} · {PROGRAMA.organizador}</p>
+        {
+          SUPPORT_EMAIL && (
+            <p>
+              ¿Dudas? Escríbenos a{' '}
+              <a class="font-semibold text-brand underline" href={`mailto:${SUPPORT_EMAIL}`}>
+                {SUPPORT_EMAIL}
+              </a>
+            </p>
+          )
+        }
+      </div>
+    </footer>
+  </body>
+</html>
