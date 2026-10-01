@@ -184,7 +184,7 @@ describe('Moodle client', () => {
   it('returns course names in the configured order', async () => {
     const { config } = fakeMoodle({
       courses: [
-        { id: 5, fullname: 'Cinco' },
+        { id: 5, fullname: 'Cinco ' },
         { id: 3, fullname: 'Tres' },
       ],
     });
