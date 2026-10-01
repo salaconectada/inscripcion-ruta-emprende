@@ -174,6 +174,6 @@ export async function getCourses(config: MoodleConfig, courseIds: number[]): Pro
   const byId = new Map((result.courses ?? []).map((c) => [c.id, c]));
   return courseIds.flatMap((id) => {
     const course = byId.get(id);
-    return course ? [{ id: course.id, fullname: course.fullname }] : [];
+    return course ? [{ id: course.id, fullname: course.fullname.trim() }] : [];
   });
 }
