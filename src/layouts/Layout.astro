@@ -2,6 +2,9 @@
 import '@/styles/global.css';
 import { PROGRAMA } from '@/config/programa';
 import { SUPPORT_EMAIL } from 'astro:env/server';
+import { Image } from 'astro:assets';
+import logoLoBarnechea from '@/assets/logo-lo-barnechea.png';
+import logoHub from '@/assets/logo-hub.png';
 
 interface Props {
   title: string;
@@ -40,15 +43,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2"
       >Ir al formulario</a
     >
-    <header class="border-b-4 border-accent bg-ink text-white">
-      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-        <div class="leading-tight">
-          <p class="text-lg font-extrabold tracking-tight">{PROGRAMA.nombre}</p>
-          <p class="text-xs text-white/75">{PROGRAMA.organizador}</p>
+    <header class="border-b-4 border-accent bg-surface">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <div class="flex min-w-0 items-center gap-3 sm:gap-5">
+          <Image
+            src={logoLoBarnechea}
+            alt="Municipalidad de Lo Barnechea"
+            height={44}
+            class="h-8 w-auto sm:h-11"
+            loading="eager"
+          />
+          <span class="h-8 w-px bg-line sm:h-10" aria-hidden="true"></span>
+          <Image src={logoHub} alt="HUB Lo Barnechea" height={44} class="h-8 w-auto sm:h-11" loading="eager" />
         </div>
         <a
           href="#inscripcion"
-          class="rounded-lg bg-accent px-4 py-2 text-sm font-bold text-ink transition-colors hover:bg-white"
+          class="shrink-0 rounded-lg bg-brand px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-strong"
           >Inscríbete</a
         >
       </div>
