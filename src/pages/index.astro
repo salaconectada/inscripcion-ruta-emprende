@@ -4,7 +4,6 @@ import { SUPPORT_EMAIL } from 'astro:env/server';
 import Layout from '@/layouts/Layout.astro';
 import InscripcionForm from '@/components/InscripcionForm.astro';
 import { PROGRAMA, CURSOS } from '@/config/programa';
-import logoLoBarnechea from '@/assets/logo-lo-barnechea.png';
 import logoHub from '@/assets/logo-hub.png';
 ---
 
@@ -13,16 +12,8 @@ import logoHub from '@/assets/logo-hub.png';
   description={`Inscríbete gratis en ${PROGRAMA.nombre}: ${CURSOS.length} cursos online para emprendedores. ${PROGRAMA.organizador}.`}
 >
   <main class="mx-auto max-w-2xl px-4 py-8 sm:py-12">
-    <div class="mb-6 flex items-center justify-center gap-4">
-      <Image
-        src={logoLoBarnechea}
-        alt="Municipalidad de Lo Barnechea"
-        height={36}
-        class="h-7 w-auto sm:h-9"
-        loading="eager"
-      />
-      <span class="h-7 w-px bg-line sm:h-9" aria-hidden="true"></span>
-      <Image src={logoHub} alt="HUB Lo Barnechea" height={36} class="h-7 w-auto sm:h-9" loading="eager" />
+    <div class="mb-6 flex justify-center">
+      <Image src={logoHub} alt="HUB Lo Barnechea" height={48} class="h-10 w-auto sm:h-12" loading="eager" />
     </div>
 
     <div class="rounded-2xl border-t-4 border-accent bg-surface p-6 shadow-sm sm:p-10">
