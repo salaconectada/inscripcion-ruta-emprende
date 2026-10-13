@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   fieldErrors,
+  courseTitle,
   generatePassword,
   inscripcionSchema,
   isValidRut,
@@ -107,6 +108,18 @@ describe('welcome email', () => {
     username: '12345678-5',
     courses: ['Curso 1', 'Curso <2>'],
   };
+
+  it('drops the number Moodle puts in front of each course name', () => {
+    expect(courseTitle('01 - Design Thinking para Emprendedores')).toBe('Design Thinking para Emprendedores');
+    expect(courseTitle('11 – Financiamiento')).toBe('Financiamiento');
+    expect(courseTitle('Curso sin número')).toBe('Curso sin número');
+    expect(courseTitle('3D para todos')).toBe('3D para todos');
+    const { html, text } = renderWelcomeEmail({ ...base, courses: ['01 - Design Thinking', '02 - Lean Startup'] });
+    expect(html).toContain('>Design Thinking</li>');
+    expect(html).not.toContain('01 -');
+    expect(text).toContain('1. Design Thinking');
+    expect(text).toContain('2. Lean Startup');
+  });
 
   it('points an existing account at the password reset instead', () => {
     const { html } = renderWelcomeEmail(base);

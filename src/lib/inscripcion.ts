@@ -166,7 +166,16 @@ const INK = '#1e3a4a';
 const MUTED = '#5b6b75';
 const PANEL = '#f1f5f7';
 
-export function renderWelcomeEmail(data: WelcomeEmail): { subject: string; html: string; text: string } {
+/**
+ * "01 - Design Thinking" → "Design Thinking". Moodle course names carry their
+ * own position, and the email lists them in a numbered list already.
+ */
+export function courseTitle(fullname: string): string {
+  return fullname.replace(/^\s*\d+\s*[-–—.:)]\s*/, '').trim();
+}
+
+export function renderWelcomeEmail(input: WelcomeEmail): { subject: string; html: string; text: string } {
+  const data = { ...input, courses: input.courses.map(courseTitle) };
   const loginUrl = `${data.moodleUrl}/login/index.php`;
   const forgotUrl = `${data.moodleUrl}/login/forgot_password.php`;
   const isNew = Boolean(data.password);

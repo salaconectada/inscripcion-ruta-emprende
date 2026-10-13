@@ -1,93 +1,48 @@
 ---
+import { Image } from 'astro:assets';
+import { SUPPORT_EMAIL } from 'astro:env/server';
 import Layout from '@/layouts/Layout.astro';
 import InscripcionForm from '@/components/InscripcionForm.astro';
 import { PROGRAMA, CURSOS } from '@/config/programa';
-
-const pasos = [
-  { titulo: 'Completa el formulario', texto: 'Tus datos nos permiten crear tu cuenta y registrar tu participación.' },
-  { titulo: 'Revisa tu correo', texto: 'Te enviamos tu usuario, una contraseña temporal y el enlace al Aula Virtual.' },
-  { titulo: 'Comienza a aprender', texto: 'Entra al Aula Virtual: los 11 cursos ya estarán disponibles para ti.' },
-];
+import logoLoBarnechea from '@/assets/logo-lo-barnechea.png';
+import logoHub from '@/assets/logo-hub.png';
 ---
 
 <Layout
   title={`Inscripción · ${PROGRAMA.nombre}`}
   description={`Inscríbete gratis en ${PROGRAMA.nombre}: ${CURSOS.length} cursos online para emprendedores. ${PROGRAMA.organizador}.`}
 >
-  <!-- Hero -->
-  <section class="bg-ink text-white">
-    <div class="mx-auto max-w-6xl px-4 pt-12 pb-16 sm:px-6 sm:pt-16 sm:pb-20">
-      <p class="text-sm font-bold tracking-widest text-accent uppercase">
-        {PROGRAMA.nombre} · Una inscripción, toda la ruta
+  <main class="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+    <div class="mb-6 flex items-center justify-center gap-4">
+      <Image
+        src={logoLoBarnechea}
+        alt="Municipalidad de Lo Barnechea"
+        height={36}
+        class="h-7 w-auto sm:h-9"
+        loading="eager"
+      />
+      <span class="h-7 w-px bg-line sm:h-9" aria-hidden="true"></span>
+      <Image src={logoHub} alt="HUB Lo Barnechea" height={36} class="h-7 w-auto sm:h-9" loading="eager" />
+    </div>
+
+    <div class="rounded-2xl border-t-4 border-accent bg-surface p-6 shadow-sm sm:p-10">
+      <h1 class="text-2xl font-extrabold sm:text-3xl">Inscripción {PROGRAMA.nombre}</h1>
+      <p class="mt-2 mb-8 text-muted">
+        Completa tus datos y recibirás en tu correo el acceso a los {CURSOS.length} cursos del Aula Virtual. Todos los campos
+        son obligatorios, salvo que se indique lo contrario.
       </p>
-      <h1 class="mt-3 max-w-3xl text-4xl leading-tight font-extrabold text-balance sm:text-5xl">
-        {CURSOS.length} cursos online para hacer crecer tu emprendimiento
-      </h1>
-      <p class="mt-5 max-w-2xl text-lg text-white/85">{PROGRAMA.descripcion}</p>
-      <div class="mt-8 flex flex-wrap items-center gap-4">
-        <a
-          href="#inscripcion"
-          class="rounded-lg bg-accent px-6 py-3 font-bold text-ink transition-colors hover:bg-white focus-visible:ring-4 focus-visible:ring-accent/40 focus-visible:outline-none"
-        >
-          Quiero inscribirme
-        </a>
-        <p class="text-sm text-white/75">Gratuito · 100% online · a tu ritmo</p>
-      </div>
+      <InscripcionForm />
     </div>
-  </section>
 
-  <!-- Courses -->
-  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="cursos-title">
-    <p class="text-sm font-bold tracking-widest text-brand uppercase">Todo incluido en tu ruta</p>
-    <h2 id="cursos-title" class="mt-2 text-2xl font-extrabold sm:text-3xl">
-      Al inscribirte tendrás acceso a todos estos cursos
-    </h2>
-    <ol class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        CURSOS.map((curso, i) => (
-          <li class="flex items-start gap-4 rounded-xl border border-line bg-surface p-4">
-            <span class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-soft font-extrabold text-brand">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <span>
-              <span class="block text-xs font-bold tracking-wider text-muted uppercase">{curso.area}</span>
-              <span class="mt-0.5 block leading-snug font-semibold">{curso.nombre}</span>
-            </span>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
-
-  <!-- Sign-up -->
-  <section id="inscripcion" class="scroll-mt-4 border-t border-line bg-surface" aria-labelledby="form-title">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-5 lg:gap-14">
-      <div class="lg:col-span-3">
-        <h2 id="form-title" class="text-2xl font-extrabold sm:text-3xl">Formulario de inscripción</h2>
-        <p class="mt-2 mb-8 text-muted">Todos los campos son obligatorios, salvo que se indique lo contrario.</p>
-        <InscripcionForm />
-      </div>
-
-      <aside class="lg:col-span-2">
-        <div class="rounded-2xl bg-canvas p-6 lg:sticky lg:top-6">
-          <h2 class="text-lg font-extrabold">Cómo funciona</h2>
-          <ol class="mt-5 space-y-5">
-            {
-              pasos.map((paso, i) => (
-                <li class="flex gap-4">
-                  <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-extrabold text-ink">
-                    {i + 1}
-                  </span>
-                  <span>
-                    <span class="block font-semibold">{paso.titulo}</span>
-                    <span class="mt-0.5 block text-sm text-muted">{paso.texto}</span>
-                  </span>
-                </li>
-              ))
-            }
-          </ol>
-        </div>
-      </aside>
-    </div>
-  </section>
+    {
+      SUPPORT_EMAIL && (
+        <p class="mt-6 text-center text-sm text-muted">
+          ¿Dudas? Escríbenos a{' '}
+          <a class="font-semibold text-brand underline" href={`mailto:${SUPPORT_EMAIL}`}>
+            {SUPPORT_EMAIL}
+          </a>
+        </p>
+      )
+    }
+  </main>
 </Layout>
