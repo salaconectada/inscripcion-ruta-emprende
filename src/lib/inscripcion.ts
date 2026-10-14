@@ -5,7 +5,6 @@
  * from the route so it can be tested directly.
  */
 import { z } from 'astro/zod';
-import { COMUNAS_RM, COMUNA_OTRA } from '@/config/programa';
 
 // ── RUT ──────────────────────────────────────────────────────────────────────
 
@@ -45,8 +44,7 @@ export const MENSAJES = {
   rutTaken: 'Este RUT ya está registrado con otro correo. Escríbenos para ayudarte.',
   email: 'Ingresa un correo electrónico válido.',
   phone: 'Ingresa un teléfono válido.',
-  comuna: 'Selecciona tu comuna.',
-  address: 'Ingresa tu dirección.',
+  address: 'Ingresa tu dirección en Lo Barnechea.',
   consent: 'Debes aceptar el uso de tus datos para inscribirte.',
   generic: 'Revisa este campo.',
   unavailable: 'Las inscripciones no están disponibles en este momento. Inténtalo más tarde.',
@@ -70,7 +68,6 @@ export const inscripcionSchema = z.object({
     .trim()
     .refine((value) => /^\+?[\d\s()-]{8,20}$/.test(value), MENSAJES.phone)
     .transform((value) => value.replace(/[^\d+]/g, '')),
-  comuna: z.enum([...COMUNAS_RM, COMUNA_OTRA], MENSAJES.comuna),
   address: z.string().trim().min(5, MENSAJES.address).max(255, MENSAJES.address),
   institution: z.string().trim().max(255).optional().default(''),
   consent: z.literal('on', MENSAJES.consent),

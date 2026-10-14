@@ -25,7 +25,7 @@ import {
   RESEND_FROM_EMAIL,
   SUPPORT_EMAIL,
 } from 'astro:env/server';
-import { PROGRAMA, MOODLE_COUNTRY } from '@/config/programa';
+import { PROGRAMA, COMUNA, MOODLE_COUNTRY } from '@/config/programa';
 import { MoodleError, createUser, enrolUser, findUserBy, getCourses, moodleBaseUrl } from '@/lib/moodle';
 import {
   MENSAJES,
@@ -59,7 +59,6 @@ export const POST: APIRoute = async ({ request }) => {
     rut: field('rut'),
     email: field('email'),
     phone: field('phone'),
-    comuna: field('comuna'),
     address: field('address'),
     institution: field('institution'),
     consent: field('consent'),
@@ -96,7 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
         lastname: data.lastname,
         email: data.email,
         idnumber: data.rut,
-        city: data.comuna,
+        city: COMUNA,
         address: data.address,
         phone1: data.phone,
         institution: data.institution,

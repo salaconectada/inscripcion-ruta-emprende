@@ -7,11 +7,9 @@
  */
 
 export const PROGRAMA = {
-  nombre: 'Ruta Emprende',
+  nombre: 'Academia HUB Lo Barnechea',
   organizador: 'Municipalidad de Lo Barnechea',
   aulaVirtual: 'Aula Virtual',
-  descripcion:
-    'Ruta Emprende reúne 11 cursos online para fortalecer distintas capacidades de tu negocio. Puedes realizar la ruta completa o elegir libremente los contenidos que sean más relevantes para ti.',
 } as const;
 
 export const CURSOS: readonly { area: string; nombre: string }[] = [
@@ -28,67 +26,11 @@ export const CURSOS: readonly { area: string; nombre: string }[] = [
   { area: 'Financiamiento', nombre: 'Financiamiento de la Innovación y Venture Capital' },
 ];
 
-/** The 52 communes of the Región Metropolitana, stored as the Moodle `city`. */
-export const COMUNAS_RM = [
-  'Alhué',
-  'Buin',
-  'Calera de Tango',
-  'Cerrillos',
-  'Cerro Navia',
-  'Colina',
-  'Conchalí',
-  'Curacaví',
-  'El Bosque',
-  'El Monte',
-  'Estación Central',
-  'Huechuraba',
-  'Independencia',
-  'Isla de Maipo',
-  'La Cisterna',
-  'La Florida',
-  'La Granja',
-  'La Pintana',
-  'La Reina',
-  'Lampa',
-  'Las Condes',
-  'Lo Barnechea',
-  'Lo Espejo',
-  'Lo Prado',
-  'Macul',
-  'Maipú',
-  'María Pinto',
-  'Melipilla',
-  'Ñuñoa',
-  'Padre Hurtado',
-  'Paine',
-  'Pedro Aguirre Cerda',
-  'Peñaflor',
-  'Peñalolén',
-  'Pirque',
-  'Providencia',
-  'Pudahuel',
-  'Puente Alto',
-  'Quilicura',
-  'Quinta Normal',
-  'Recoleta',
-  'Renca',
-  'San Bernardo',
-  'San Joaquín',
-  'San José de Maipo',
-  'San Miguel',
-  'San Pedro',
-  'San Ramón',
-  'Santiago',
-  'Talagante',
-  'Tiltil',
-  'Vitacura',
-] as const;
-
-/** Listed first in the select: the program is run by this commune. */
-export const COMUNA_DESTACADA = 'Lo Barnechea';
-
-/** Select value for a commune outside the region; the address carries the detail. */
-export const COMUNA_OTRA = 'Fuera de la Región Metropolitana';
+/**
+ * The program is for Lo Barnechea residents, so the commune is not asked: every
+ * account gets it as its Moodle `city`, and the form asks for the address in it.
+ */
+export const COMUNA = 'Lo Barnechea';
 
 /** ISO country code stored on every account. */
 export const MOODLE_COUNTRY = 'CL';

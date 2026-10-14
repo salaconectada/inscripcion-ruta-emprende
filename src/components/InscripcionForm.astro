@@ -6,7 +6,7 @@
  * but the submit needs the script to show the result.
  */
 import { MOODLE_URL, MOODLE_TOKEN, MOODLE_COURSE_IDS, RESEND_API_KEY, RESEND_FROM_EMAIL } from 'astro:env/server';
-import { COMUNAS_RM, COMUNA_DESTACADA, COMUNA_OTRA } from '@/config/programa';
+import { COMUNA } from '@/config/programa';
 import { parseCourseIds } from '@/lib/inscripcion';
 
 // Say it is not configured before anyone types, not after they submit.
@@ -14,7 +14,6 @@ const configured = Boolean(
   MOODLE_URL && MOODLE_TOKEN && parseCourseIds(MOODLE_COURSE_IDS).length && RESEND_API_KEY && RESEND_FROM_EMAIL,
 );
 const disabled = !configured && !import.meta.env.DEV;
-const otrasComunas = COMUNAS_RM.filter((c) => c !== COMUNA_DESTACADA);
 ---
 
 <div data-inscripcion>
@@ -97,33 +96,19 @@ const otrasComunas = COMUNAS_RM.filter((c) => c !== COMUNA_DESTACADA);
       <p id="e-email" data-error-for="email" class="mt-1 hidden text-sm text-danger"></p>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2">
-      <div>
-        <label class="label" for="f-comuna">Comuna</label>
-        <select class="field" id="f-comuna" name="comuna" required aria-describedby="e-comuna">
-          <option value="" selected disabled>Selecciona tu comuna</option>
-          <option value={COMUNA_DESTACADA}>{COMUNA_DESTACADA}</option>
-          <optgroup label="Región Metropolitana">
-            {otrasComunas.map((c) => <option value={c}>{c}</option>)}
-          </optgroup>
-          <option value={COMUNA_OTRA}>{COMUNA_OTRA}</option>
-        </select>
-        <p id="e-comuna" data-error-for="comuna" class="mt-1 hidden text-sm text-danger"></p>
-      </div>
-      <div>
-        <label class="label" for="f-address">Dirección</label>
-        <input
-          class="field"
-          id="f-address"
-          name="address"
-          required
-          autocomplete="street-address"
-          placeholder="Calle, número, depto."
-          maxlength="255"
-          aria-describedby="e-address"
-        />
-        <p id="e-address" data-error-for="address" class="mt-1 hidden text-sm text-danger"></p>
-      </div>
+    <div>
+      <label class="label" for="f-address">Tu dirección en {COMUNA}</label>
+      <input
+        class="field"
+        id="f-address"
+        name="address"
+        required
+        autocomplete="street-address"
+        placeholder="Calle, número, depto."
+        maxlength="255"
+        aria-describedby="e-address"
+      />
+      <p id="e-address" data-error-for="address" class="mt-1 hidden text-sm text-danger"></p>
     </div>
 
     <div>
@@ -182,7 +167,7 @@ const otrasComunas = COMUNAS_RM.filter((c) => c !== COMUNA_DESTACADA);
       disabled={disabled}
       class="w-full rounded-lg bg-brand px-6 py-3.5 text-base font-bold text-white transition-colors hover:bg-brand-strong focus-visible:ring-4 focus-visible:ring-brand/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
     >
-      Inscribirme en la ruta
+      Inscribirme
     </button>
   </form>
 

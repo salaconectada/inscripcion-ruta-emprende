@@ -1,10 +1,10 @@
-# Inscripción Ruta Emprende
+# Inscripción Academia HUB Lo Barnechea
 
-Página de inscripción para **Ruta Emprende** (Municipalidad de Lo Barnechea). La persona completa un
+Página de inscripción para **Academia HUB Lo Barnechea** (Municipalidad de Lo Barnechea). La persona completa un
 formulario y, en un solo paso:
 
 1. se crea su cuenta en Moodle (o se reutiliza la existente si el correo ya está registrado);
-2. queda inscrita como estudiante en los 11 cursos de la ruta;
+2. queda inscrita como estudiante en los 11 cursos;
 3. recibe un correo con su usuario, una contraseña temporal y el enlace al Aula Virtual.
 
 Construido con Astro, desplegado en Netlify. La página es estática; solo `/api/inscripcion` corre en el
@@ -21,7 +21,7 @@ Acciones en lote_:
 | Nombres / Apellidos           | `firstname` / `lastname`                |
 | Correo                        | `email`                                 |
 | Teléfono                      | `phone1`                                |
-| Comuna                        | `city`                                  |
+| Comuna (siempre Lo Barnechea) | `city`                                  |
 | Dirección                     | `address`                               |
 | Emprendimiento u organización | `institution`                           |
 

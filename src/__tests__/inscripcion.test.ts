@@ -40,7 +40,6 @@ describe('sign-up schema', () => {
     rut: '12.345.678-5',
     email: '  Ana.Perez@Example.CL ',
     phone: '+56 9 1234 5678',
-    comuna: 'Ñuñoa',
     address: 'Av. Irarrázaval 1234, depto 5',
     institution: '',
     consent: 'on',
@@ -60,7 +59,6 @@ describe('sign-up schema', () => {
     ['rut', '12.345.678-4'],
     ['email', 'no-es-correo'],
     ['phone', '123'],
-    ['comuna', 'Gotham'],
     ['address', 'x'],
     ['consent', ''],
   ])('rejects an invalid %s with a translated message', (field, value) => {
@@ -100,7 +98,7 @@ describe('temporary password', () => {
 
 describe('welcome email', () => {
   const base = {
-    programa: 'Ruta Emprende',
+    programa: 'Academia HUB Lo Barnechea',
     organizador: 'Municipalidad de Lo Barnechea',
     supportEmail: 'soporte@example.cl',
     moodleUrl: 'https://aula.example.cl',
