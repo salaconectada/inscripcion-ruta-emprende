@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
  * to its final domain is a change of environment variable, not of code.
  */
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://inscripcion-ruta-emprende.netlify.app',
+  site: process.env.SITE_URL || 'https://academia-hub-lobarnechea.netlify.app',
   output: 'static',
   // No Netlify emulation in `astro dev`: the site uses no edge functions or
   // image CDN, and the edge emulator needs Deno installed to start.
