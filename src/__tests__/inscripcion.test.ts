@@ -40,6 +40,7 @@ describe('sign-up schema', () => {
     rut: '12.345.678-5',
     email: '  Ana.Perez@Example.CL ',
     phone: '+56 9 1234 5678',
+    comuna: 'Lo Barnechea',
     address: 'Av. Irarrázaval 1234, depto 5',
     institution: '',
     consent: 'on',
@@ -59,6 +60,7 @@ describe('sign-up schema', () => {
     ['rut', '12.345.678-4'],
     ['email', 'no-es-correo'],
     ['phone', '123'],
+    ['comuna', 'Gotham'],
     ['address', 'x'],
     ['consent', ''],
   ])('rejects an invalid %s with a translated message', (field, value) => {

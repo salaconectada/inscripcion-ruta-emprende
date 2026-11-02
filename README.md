@@ -21,7 +21,7 @@ Acciones en lote_:
 | Nombres / Apellidos           | `firstname` / `lastname`                |
 | Correo                        | `email`                                 |
 | Teléfono                      | `phone1`                                |
-| Comuna (siempre Lo Barnechea) | `city`                                  |
+| Comuna                        | `city`                                  |
 | Dirección                     | `address`                               |
 | Emprendimiento u organización | `institution`                           |
 

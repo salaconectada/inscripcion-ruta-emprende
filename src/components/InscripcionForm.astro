@@ -6,7 +6,7 @@
  * but the submit needs the script to show the result.
  */
 import { MOODLE_URL, MOODLE_TOKEN, MOODLE_COURSE_IDS, RESEND_API_KEY, RESEND_FROM_EMAIL } from 'astro:env/server';
-import { COMUNA } from '@/config/programa';
+import { COMUNAS_RM, COMUNA_DESTACADA, COMUNA_OTRA } from '@/config/programa';
 import { parseCourseIds } from '@/lib/inscripcion';
 
 // Say it is not configured before anyone types, not after they submit.
@@ -14,6 +14,7 @@ const configured = Boolean(
   MOODLE_URL && MOODLE_TOKEN && parseCourseIds(MOODLE_COURSE_IDS).length && RESEND_API_KEY && RESEND_FROM_EMAIL,
 );
 const disabled = !configured && !import.meta.env.DEV;
+const otrasComunas = COMUNAS_RM.filter((c) => c !== COMUNA_DESTACADA);
 ---
 
 <div data-inscripcion>
@@ -97,7 +98,17 @@ const disabled = !configured && !import.meta.env.DEV;
     </div>
 
     <div>
-      <label class="label" for="f-address">Tu dirección en {COMUNA}</label>
+      <label class="label" for="f-comuna">Comuna</label>
+      <select class="field" id="f-comuna" name="comuna" required aria-describedby="e-comuna">
+        <option value={COMUNA_DESTACADA} selected>{COMUNA_DESTACADA}</option>
+        {otrasComunas.map((c) => <option value={c}>{c}</option>)}
+        <option value={COMUNA_OTRA}>{COMUNA_OTRA}</option>
+      </select>
+      <p id="e-comuna" data-error-for="comuna" class="mt-1 hidden text-sm text-danger"></p>
+    </div>
+
+    <div>
+      <label class="label" for="f-address">Dirección</label>
       <input
         class="field"
         id="f-address"

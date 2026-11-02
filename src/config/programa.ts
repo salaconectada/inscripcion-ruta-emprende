@@ -26,11 +26,67 @@ export const CURSOS: readonly { area: string; nombre: string }[] = [
   { area: 'Financiamiento', nombre: 'Financiamiento de la Innovación y Venture Capital' },
 ];
 
-/**
- * The program is for Lo Barnechea residents, so the commune is not asked: every
- * account gets it as its Moodle `city`, and the form asks for the address in it.
- */
-export const COMUNA = 'Lo Barnechea';
+/** The 52 communes of the Región Metropolitana, stored as the Moodle `city`. */
+export const COMUNAS_RM = [
+  'Alhué',
+  'Buin',
+  'Calera de Tango',
+  'Cerrillos',
+  'Cerro Navia',
+  'Colina',
+  'Conchalí',
+  'Curacaví',
+  'El Bosque',
+  'El Monte',
+  'Estación Central',
+  'Huechuraba',
+  'Independencia',
+  'Isla de Maipo',
+  'La Cisterna',
+  'La Florida',
+  'La Granja',
+  'La Pintana',
+  'La Reina',
+  'Lampa',
+  'Las Condes',
+  'Lo Barnechea',
+  'Lo Espejo',
+  'Lo Prado',
+  'Macul',
+  'Maipú',
+  'María Pinto',
+  'Melipilla',
+  'Ñuñoa',
+  'Padre Hurtado',
+  'Paine',
+  'Pedro Aguirre Cerda',
+  'Peñaflor',
+  'Peñalolén',
+  'Pirque',
+  'Providencia',
+  'Pudahuel',
+  'Puente Alto',
+  'Quilicura',
+  'Quinta Normal',
+  'Recoleta',
+  'Renca',
+  'San Bernardo',
+  'San Joaquín',
+  'San José de Maipo',
+  'San Miguel',
+  'San Pedro',
+  'San Ramón',
+  'Santiago',
+  'Talagante',
+  'Tiltil',
+  'Vitacura',
+] as const;
+
+/** The program runs in this commune: listed first in the select and preselected. */
+export const COMUNA_DESTACADA = 'Lo Barnechea';
+
+/** Select value for a commune outside the region; the address carries the detail. */
+export const COMUNA_OTRA = 'Fuera de la Región Metropolitana';
 
 /** ISO country code stored on every account. */
 export const MOODLE_COUNTRY = 'CL';
