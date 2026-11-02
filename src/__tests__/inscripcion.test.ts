@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   fieldErrors,
   courseTitle,
-  generatePassword,
   inscripcionSchema,
   isValidRut,
   normalizeRut,
   parseCourseIds,
   renderWelcomeEmail,
+  temporaryPassword,
   usernameFromRut,
 } from '@/lib/inscripcion';
 import { MoodleError, callMoodle, createUser, enrolUser, findUserBy, getCourses } from '@/lib/moodle';
@@ -85,16 +85,10 @@ describe('course ids', () => {
 });
 
 describe('temporary password', () => {
-  it('always satisfies the default Moodle policy', () => {
-    for (let i = 0; i < 500; i++) {
-      const p = generatePassword();
-      expect(p).toHaveLength(12);
-      expect(p).toMatch(/[a-z]/);
-      expect(p).toMatch(/[A-Z]/);
-      expect(p).toMatch(/\d/);
-      expect(p).toMatch(/[^A-Za-z0-9]/);
-      expect(p).not.toMatch(/[<>&"'lO01]/);
-    }
+  it('is the first five digits of the RUT', () => {
+    expect(temporaryPassword('12345678-5')).toBe('12345');
+    expect(temporaryPassword('7654321-4')).toBe('76543');
+    expect(temporaryPassword('10000013-K')).toBe('10000');
   });
 });
 

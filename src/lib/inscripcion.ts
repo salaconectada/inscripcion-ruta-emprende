@@ -102,36 +102,14 @@ export function parseCourseIds(value: string | undefined): number[] {
 
 // ── Temporary password ───────────────────────────────────────────────────────
 
-const LOWER = 'abcdefghijkmnpqrstuvwxyz';
-const UPPER = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-const DIGITS = '23456789';
-// Only symbols that survive email clients, copy-paste and HTML unescaped.
-const SYMBOLS = '!#$%*+=?@';
-
 /**
- * Meets Moodle's default password policy (8+ characters, with a lowercase, an
- * uppercase, a digit and a symbol) with room to spare. Look-alike characters
- * (l/1, O/0) are left out because people copy this from an email.
+ * The first five digits of the RUT, as the program asked for. Moodle only
+ * accepts this with its password policy turned off, and it is guessable by
+ * anyone who knows the RUT, so accounts are still forced to change it on first
+ * login.
  */
-export function generatePassword(length = 12): string {
-  const all = LOWER + UPPER + DIGITS + SYMBOLS;
-  const pick = (set: string) => set[randomIndex(set.length)];
-  const chars = [pick(LOWER), pick(UPPER), pick(DIGITS), pick(SYMBOLS)];
-  while (chars.length < length) chars.push(pick(all));
-  for (let i = chars.length - 1; i > 0; i--) {
-    const j = randomIndex(i + 1);
-    [chars[i], chars[j]] = [chars[j], chars[i]];
-  }
-  return chars.join('');
-}
-
-function randomIndex(max: number): number {
-  // Rejection sampling keeps every character equally likely.
-  const limit = Math.floor(0x1_0000_0000 / max) * max;
-  const buf = new Uint32Array(1);
-  do crypto.getRandomValues(buf);
-  while (buf[0] >= limit);
-  return buf[0] % max;
+export function temporaryPassword(rut: string): string {
+  return rut.slice(0, 5);
 }
 
 // ── Welcome email ────────────────────────────────────────────────────────────

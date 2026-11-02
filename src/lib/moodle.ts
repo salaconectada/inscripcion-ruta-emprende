@@ -119,8 +119,8 @@ export interface NewMoodleUser {
 
 /**
  * Creates a manual-auth account and returns its id. The account is flagged to
- * change its password on first login, so the generated one sent by email is
- * only ever a one-time key.
+ * change its password on first login, so the one sent by email is only ever
+ * a one-time key.
  */
 export async function createUser(config: MoodleConfig, user: NewMoodleUser): Promise<number> {
   const params: Params = {

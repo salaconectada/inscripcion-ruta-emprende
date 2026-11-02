@@ -30,10 +30,10 @@ import { MoodleError, createUser, enrolUser, findUserBy, getCourses, moodleBaseU
 import {
   MENSAJES,
   fieldErrors,
-  generatePassword,
   inscripcionSchema,
   parseCourseIds,
   renderWelcomeEmail,
+  temporaryPassword,
   usernameFromRut,
 } from '@/lib/inscripcion';
 
@@ -88,7 +88,7 @@ export const POST: APIRoute = async ({ request }) => {
         return fail(409, { rut: [MENSAJES.rutTaken] });
       }
       const newUsername = usernameFromRut(data.rut);
-      password = generatePassword();
+      password = temporaryPassword(data.rut);
       const id = await createUser(moodle, {
         username: newUsername,
         password,
