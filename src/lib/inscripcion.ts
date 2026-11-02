@@ -5,7 +5,7 @@
  * from the route so it can be tested directly.
  */
 import { z } from 'astro/zod';
-import { COMUNAS_RM, COMUNA_OTRA } from '@/config/programa';
+import { COMUNAS_RM, COMUNA_DESTACADA, COMUNA_OTRA } from '@/config/programa';
 
 // ── RUT ──────────────────────────────────────────────────────────────────────
 
@@ -53,29 +53,39 @@ export const MENSAJES = {
   moodle: 'No pudimos completar tu inscripción en el Aula Virtual. Inténtalo nuevamente en unos minutos.',
 } as const;
 
-export const inscripcionSchema = z.object({
-  firstname: z.string().trim().min(2, MENSAJES.firstname).max(100, MENSAJES.firstname),
-  lastname: z.string().trim().min(2, MENSAJES.lastname).max(100, MENSAJES.lastname),
-  rut: z.string().transform((value, ctx) => {
-    const rut = normalizeRut(value);
-    if (!rut || !isValidRut(rut)) {
-      ctx.addIssue({ code: 'custom', message: MENSAJES.rut });
-      return z.NEVER;
-    }
-    return rut;
-  }),
-  email: z.string().trim().toLowerCase().pipe(z.email(MENSAJES.email).max(100, MENSAJES.email)),
-  phone: z
-    .string()
-    .trim()
-    .refine((value) => /^\+?[\d\s()-]{8,20}$/.test(value), MENSAJES.phone)
-    .transform((value) => value.replace(/[^\d+]/g, '')),
-  comuna: z.enum([...COMUNAS_RM, COMUNA_OTRA], MENSAJES.comuna),
-  address: z.string().trim().min(5, MENSAJES.address).max(255, MENSAJES.address),
-  institution: z.string().trim().max(255).optional().default(''),
-  consent: z.literal('on', MENSAJES.consent),
-  honeypot: z.string().max(0),
-});
+export const inscripcionSchema = z
+  .object({
+    firstname: z.string().trim().min(2, MENSAJES.firstname).max(100, MENSAJES.firstname),
+    lastname: z.string().trim().min(2, MENSAJES.lastname).max(100, MENSAJES.lastname),
+    rut: z.string().transform((value, ctx) => {
+      const rut = normalizeRut(value);
+      if (!rut || !isValidRut(rut)) {
+        ctx.addIssue({ code: 'custom', message: MENSAJES.rut });
+        return z.NEVER;
+      }
+      return rut;
+    }),
+    email: z.string().trim().toLowerCase().pipe(z.email(MENSAJES.email).max(100, MENSAJES.email)),
+    phone: z
+      .string()
+      .trim()
+      .refine((value) => /^\+?[\d\s()-]{8,20}$/.test(value), MENSAJES.phone)
+      .transform((value) => value.replace(/[^\d+]/g, '')),
+    comuna: z.enum([...COMUNAS_RM, COMUNA_OTRA], MENSAJES.comuna),
+    address: z.string().trim().max(255, MENSAJES.address).optional().default(''),
+    institution: z.string().trim().max(255).optional().default(''),
+    consent: z.literal('on', MENSAJES.consent),
+    honeypot: z.string().max(0),
+  })
+  // The address is only asked of Lo Barnechea residents; the form hides it for
+  // every other commune. `when` lets this run even if unrelated fields failed,
+  // so a missing address is reported together with the rest.
+  .refine((data) => data.comuna !== COMUNA_DESTACADA || data.address.length >= 5, {
+    message: MENSAJES.address,
+    path: ['address'],
+    when: (payload) => !payload.issues.some((issue) => ['comuna', 'address'].includes(String(issue.path?.[0]))),
+  })
+  .transform((data) => (data.comuna === COMUNA_DESTACADA ? data : { ...data, address: '' }));
 
 export type Inscripcion = z.infer<typeof inscripcionSchema>;
 

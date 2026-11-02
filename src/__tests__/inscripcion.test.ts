@@ -72,6 +72,22 @@ describe('sign-up schema', () => {
     expect(errors[field][0]).not.toBe('Revisa este campo.');
   });
 
+  it('asks for the address only in Lo Barnechea', () => {
+    const missing = inscripcionSchema.safeParse({ ...valid, address: '' });
+    expect(missing.success).toBe(false);
+    if (!missing.success) expect(Object.keys(fieldErrors(missing.error.issues))).toEqual(['address']);
+
+    const elsewhere = inscripcionSchema.safeParse({ ...valid, comuna: 'Macul', address: 'texto oculto' });
+    expect(elsewhere.success).toBe(true);
+    if (elsewhere.success) expect(elsewhere.data.address).toBe('');
+  });
+
+  it('reports a missing address together with other errors', () => {
+    const result = inscripcionSchema.safeParse({ ...valid, address: '', phone: '1' });
+    expect(result.success).toBe(false);
+    if (!result.success) expect(Object.keys(fieldErrors(result.error.issues)).sort()).toEqual(['address', 'phone']);
+  });
+
   it('rejects a filled honeypot', () => {
     expect(inscripcionSchema.safeParse({ ...valid, honeypot: 'bot' }).success).toBe(false);
   });

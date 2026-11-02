@@ -107,8 +107,8 @@ const otrasComunas = COMUNAS_RM.filter((c) => c !== COMUNA_DESTACADA);
       <p id="e-comuna" data-error-for="comuna" class="mt-1 hidden text-sm text-danger"></p>
     </div>
 
-    <div>
-      <label class="label" for="f-address">Dirección</label>
+    <div data-address-for={COMUNA_DESTACADA}>
+      <label class="label" for="f-address">Dirección en {COMUNA_DESTACADA}</label>
       <input
         class="field"
         id="f-address"
@@ -207,6 +207,19 @@ const otrasComunas = COMUNAS_RM.filter((c) => c !== COMUNA_DESTACADA);
 
   if (root && form && button) {
     const label = button.textContent;
+
+    // The address is asked only for the commune named on its wrapper.
+    const comuna = form.querySelector<HTMLSelectElement>('[name="comuna"]');
+    const addressField = form.querySelector<HTMLElement>('[data-address-for]');
+    const address = addressField?.querySelector('input');
+    const syncAddress = () => {
+      if (!comuna || !addressField || !address) return;
+      const show = comuna.value === addressField.dataset.addressFor;
+      addressField.hidden = !show;
+      address.required = show;
+    };
+    comuna?.addEventListener('change', syncAddress);
+    syncAddress();
     const fallback = 'No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.';
 
     const clearErrors = () => {
