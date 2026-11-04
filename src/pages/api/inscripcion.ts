@@ -136,7 +136,8 @@ export const POST: APIRoute = async ({ request }) => {
 
   const { error: sendError } = await new Resend(RESEND_API_KEY).emails
     .send({
-      from: `${PROGRAMA.nombre} <${RESEND_FROM_EMAIL}>`,
+      // Accept either a bare address or one that already carries a display name.
+      from: RESEND_FROM_EMAIL.includes('<') ? RESEND_FROM_EMAIL : `${PROGRAMA.nombre} <${RESEND_FROM_EMAIL}>`,
       to: data.email,
       ...(SUPPORT_EMAIL ? { replyTo: SUPPORT_EMAIL } : {}),
       subject: email.subject,
